@@ -2,6 +2,69 @@
 Changelog for package depthai
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.2.1 (2025-12-01)
+------------------
+## Bug fixes
+* [_RVC4_] Fix a regression for IMX586 only working with the 4000x3000 sensor config at 30 FPS
+On the LuxonisOS 1.20.5 and newer, up to 240 FPS is now supported
+
+3.2.0 (2025-12-01)
+------------------
+## Features
+* Extend `DetectionParser` and `ImgDetections` message with **instance segmentation** and **keypoints** parsing
+     * Keypoints run on device for both RVC2 and RVC4
+     * Instance segmentation runs on device for RVC4 and on host for RVC2
+     * C++  examples [here](https://github.com/luxonis/depthai-core/tree/v3.2.0/examples/cpp/DetectionNetwork) and Python examples [here](https://github.com/luxonis/depthai-core/tree/v3.2.0/examples/python/DetectionNetwork)
+* Add support for the new Snaps&Events API:
+    * Example for C++ [here](https://github.com/luxonis/depthai-core/tree/v3.2.0/examples/cpp/Events) and for Python [here](https://github.com/luxonis/depthai-core/tree/v3.2.0/examples/python/Events)
+* [_RVC4_] Add **NeuralDepth** node supporting the neural depth running on device
+     * Supported on Luxonis OS 1.20.4 and newer
+     * Four sizes supported
+         * LARGE -> 768x480 @ 10.8 FPS
+         * MEDIUM -> 576x360 @ 25.5 FPS
+         * SMALL -> 480x300 @ 42.5 FPS
+         * NANO -> 384x240 @ 59.7 FPS
+     * Examples for C++ [here](https://github.com/luxonis/depthai-core/tree/v3.2.0/examples/cpp/NeuralDepth) and for Python [here](https://github.com/luxonis/depthai-core/tree/v3.2.0/examples/python/NeuralDepth)
+* [_RVC4_] Switch the front LED to green when DepthAI is running
+* [_RVC2_] Add tuning for the IMX577 sensor, removing the previously present blue tint
+
+
+## Bug fixes and stability
+* Fix an edge case for IPv4LL discovery on MacOS https://github.com/luxonis/XLink/pull/100
+* [_RVC4_] Fix a small memory leak on RVC4 happening in Camera node and in StereoDepth when extended mode is enabled
+* [_RVC2_] Fix a rare issue of IMU preventing a device reboot
+* [_RVC2_] Patch ToF calibration that caused a minor bump in readout values in the middle of the frame
+
+3.1.0 (2025-11-05)
+------------------
+## Features
+* Automatically select the number of pools in Camera node
+    *  Improves the performance at high resolutions for OAK1-Max
+* Implement the maximum exposure cap in AE on RVC4
+    *  Requires Luxonis OS v1.19.1
+* Add setters to `PointCloudData` message
+    * C++ example [here](https://github.com/luxonis/depthai-core/blob/main/examples/cpp/RGBD/rgbd_pcl_processing.cpp)
+    * Python example [here](https://github.com/luxonis/depthai-core/blob/main/examples/python/RGBD/rgbd_pcl_processing.py)
+
+## Bug fixes
+* Address MacOS weak vtables issues causing deadlocks in the new `DynamicCalibration` node
+* Turn on the watchdog early during discovery of RVC2 USB devices to avoid soft bricking the device along with handling the case where the device gets into that state to recover it on the next boot
+* Fix the usage of RVC2 devices inside Linux containers because of missing udev support
+* Fix undistortion on RVC4 for the chroma plane when `NV12` type is requested
+* Use the correct `ImgTransformations` in SpatialDetectionNetwork on RVC4 in case depth was not aligned to RGB
+* Stability fixes for rare case with IMU halting the destruction on RVC2
+* Fix a timestamp overflow bug on the BNO08x IMU on RVC2
+
+## Misc
+* Update `zoo_helper` binary with better error handling
+* Reduce the number of symbols on Windows by performing more aggressive inlining
+* `DynamicCalibration` input control now has a shorter API to send commands to the node
+* Add intrinsics metadata to thermal frames
+* Update the examples using `StereoDepth` node with removing the explicit `NV12` type request for better performance
+* Improve IMX678 support on RVC2 with better black level correction, improving brightness and color accuracy 
+* [Python bindings] Add explicit `numpy` requirement to the Python wheels
+* [Python bindings] Add missing bindings to set the filter order on the `StereoDepth` node
+
 3.0.0 (2025-07-31)
 ------------------
 # DepthAI v3.0.0 release candidate is out :tada:
